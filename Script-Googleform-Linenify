@@ -1,0 +1,30 @@
+function onSubmit(e) {
+  var response = e.response;
+  var itemResponses = response.getItemResponses();
+  
+  var name = itemResponses[0].getResponse();
+  var month = itemResponses[1].getResponse();
+  var type = itemResponses[2].getResponse();
+  var title = itemResponses[3].getResponse();
+   var memo = itemResponses[4].getResponse();
+  var totle = itemResponses[5].getResponse();
+  var paydate = itemResponses[6].getResponse();
+  var fileId = itemResponses[7].getResponse(); // Assuming that the response is a file ID.
+
+  var lineToken = '<Line-Token-input-Here>';
+  
+  // Get the file URL from Google Drive
+  var file = DriveApp.getFileById(fileId);
+  var fileUrl = file.getDownloadUrl(); // This gets the download URL of the file.
+
+  // Create a message with the file URL
+  var message = 'ผู้ชำระ: ' + name + '\nเดือนที่ชำระ: ' + month + '\nประเภท: ' + type + '\nรายการ: ' + title + '\nหมายเหตุ: ' + memo + '\nจำนวน: ' + totle + '\nจำนวน: ' + totle + '\nสลิ๊ปจ่าย: ' + fileUrl;
+  var payload = {'message': message};
+  var options = {
+    'method': 'post',
+    'payload': payload,
+    'headers': {'Authorization': 'Bearer ' + lineToken}
+  };
+  
+  UrlFetchApp.fetch('https://notify-api.line.me/api/notify', options);
+}
